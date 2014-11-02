@@ -1,0 +1,37 @@
+
+body {
+    font: 10px sans-serif;
+    margin: 0;
+}
+
+.line {
+    fill: none;
+    stroke: #666;
+    stroke-width: 0px;
+}
+
+.area {
+    fill: #8395A7;
+}
+
+.text-title {
+    fill: #fff;
+    text-anchor: middle;
+    font-size: 20px;
+}
+.text-active {
+    fill: #fff;
+    text-anchor: middle;
+    font-size: 48px;
+    font-weight: bold;
+}
+.yaxis {
+    text-anchor: end;
+    stroke: gray;
+    fill: none;
+    stroke-width: 1px
+}
+
+.graph-bg {
+    background-color: #B7CBE1;
+}

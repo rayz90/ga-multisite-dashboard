@@ -1,0 +1,151 @@
+<html>
+<head>
+    <link href="/css/base.css" rel="stylesheet" type="text/css" />
+    <title>Google Analytics Dashboard</title>
+    <meta http-equiv="refresh" content="300">
+</head>
+<body>
+<script>
+    var getJSON = function(url) {
+        return new Promise(function(resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('get', url, true);
+            xhr.responseType = 'json';
+            xhr.onload = function() {
+                var status = xhr.status;
+                if (status == 200) {
+                    resolve(xhr.response);
+                } else {
+                    reject(status);
+                }
+            };
+            xhr.send();
+        });
+    };
+
+    var realtime = {};
+    getJSON('/api/getactiveusers.json').then(function(data) {
+        realtime = data;
+    });
+</script>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+    var margin = {top: 8, right: 0, bottom: 3, left: 1},
+            width = (window.innerWidth/{{ horizontal_tiles }}) - margin.left - margin.right,
+            height = (window.innerHeight/{{ vertical_tiles }}) - margin.top - margin.bottom;
+
+    var parseDate = d3.time.format("%Y%m%d%H").parse;
+
+    var x = d3.time.scale()
+            .range([0, width]);
+
+    var y = d3.scale.linear()
+            .range([height, 0]);
+
+    var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("right")
+            .ticks(2)
+            .tickFormat(d3.format("d"))
+            .tickSubdivide(0);
+
+    var area = d3.svg.area()
+            .x(function(d) { return x(d.dateHour); })
+            .y0(height)
+            .y1(function(d) { return y(d.users); });
+
+    var line = d3.svg.line()
+            .x(function(d) { return x(d.dateHour); })
+            .y(function(d) { return y(d.users); });
+
+        d3.csv("/test.csv", type, function (error, data) {
+
+            // Nest data by website.
+            var websites = d3.nest()
+                    .key(function (d) {
+                        return d.website;
+                    })
+                    .entries(data);
+
+            // Compute the maximum users per website, needed for the y-domain.
+            maxUsers = 0;
+            websites.forEach(function (s) {
+                maxUsers = Math.max(maxUsers, d3.max(s.values, function (d) {
+                    return d.users;
+                }));
+            });
+
+            // Compute the minimum and maximum date across website.
+            // We assume values are sorted by date.
+            x.domain([
+                d3.min(websites, function (s) {
+                    return s.values[0].dateHour;
+                }),
+                d3.max(websites, function (s) {
+                    return s.values[s.values.length - 1].dateHour;
+                })
+            ]);
+
+            // Add an SVG element for each website, with the desired dimensions and margin.
+            var svg = d3.select("body").selectAll("svg")
+                    .data(websites)
+                    .enter().append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .attr("class", "graph-bg")
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            // Add the area path elements. Note: the y-domain is set per element.
+            svg.append("path")
+                    .attr("class", "area")
+                    .attr("d", function (d) {
+                        y.domain([0, maxUsers]);
+                        return area(d.values);
+                    });
+
+            // Add the line path elements. Note: the y-domain is set per element.
+            svg.append("path")
+                    .attr("class", "line")
+                    .attr("d", function (d) {
+                        y.domain([0, maxUsers]);
+                        return line(d.values);
+                    });
+
+            svg.append("g")
+                    .attr("class", "yaxis")
+                    .call(yAxis)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 1)
+                    .attr("dy", ".71em");
+
+            // Add a small label for the website name.
+            svg.append("text")
+                    .attr('class', 'text-title')
+                    .attr("x", width / 2)
+                    .attr("y", 12)
+                    .text(function (d) {
+                        return d.key;
+                    });
+
+            svg.append("text")
+                    .attr('class', 'text-active')
+                    .attr("x", width / 2)
+                    .attr("y", height / 2 )
+                    .text(function (d) {
+                        return (d.key in realtime) ? realtime[d.key] : 0;
+                    });
+        });
+
+
+    function type(d) {
+        d.users = +d.users;
+        d.dateHour = parseDate(d.dateHour);
+        return d;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+    "google_api": {
+        "app_name": "xxxx",
+        "username": "xxxxx@developer.gserviceaccount.com",
+        "key_path": "/../config/key.p12",
+        "key_secret": "notasecret"
+    },
+    "display": {
+        "horizontal_tiles": "4",
+        "vertical_tiles": "5"
+    },
+    "websites": [
+        {
+            "tracking_id": "UA-21936946-1",
+            "name": "Moment of Geekiness"
+        }
+    ]
+}
