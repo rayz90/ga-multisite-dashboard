@@ -1,13 +1,13 @@
 Google Analytics multi-site dashboard
 =========
 
-This is a dashboard that can shows the visitors of multiple different websites using the Google Analytics API. For each websites it shows a graph of the vistors in the last 24 hours and the realtime vistors.
+This is a dashboard that shows the visitors of multiple different websites using the Google Analytics API. For each websites it shows a graph of the vistors in the last 24 hours and the realtime vistors.
 
 The idea and layout is shamelessly ripped from https://github.com/Code4SA/dashboard
 
 Screenshot
 ----
-![A nice screenshot with some mock data](http://i.imgur.com/OAH6qRg.png)
+![A nice screenshot with some mock data](http://i.imgur.com/OJuu4ao.png)
 _A nice screenshot with some mock data_
 
 Installation
