@@ -59,7 +59,7 @@
             .x(function(d) { return x(d.dateHour); })
             .y(function(d) { return y(d.users); });
 
-        d3.csv("/test.csv", type, function (error, data) {
+        d3.csv("/api/getuserslastday.csv", type, function (error, data) {
 
             // Nest data by website.
             var websites = d3.nest()

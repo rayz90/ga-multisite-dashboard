@@ -4,13 +4,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 $app = new Silex\Application();
 
 /* START CONFIGURATION */
-$app['debug'] = true;
+$app['debug'] = false;
 $app['config_path'] = __DIR__.'/../config/config.json';
 /* END CONFIGURATION */
 
@@ -154,7 +151,6 @@ $app->get('/api/getuserslastday.csv', function (Silex\Application $app) {
             }
         } catch (Google_Exception $e) {
             $app['monolog']->addError($e->getMessage());
-            continue;
         }
     }
 
@@ -169,8 +165,8 @@ $app->get('/api/getuserslastday.csv', function (Silex\Application $app) {
 });
 
 /**
- * Returns a CSV with the active vistors for each website
- * Format: website;users
+ * Returns a Json with the active vistors for each website
+ * Format: {website: users}
  */
 $app->get('/api/getactiveusers.json', function (Silex\Application $app) {
     /* @var Google_Service_Analytics $service */
@@ -197,6 +193,9 @@ $app->get('/api/getactiveusers.json', function (Silex\Application $app) {
     return $response;
 });
 
+/**
+ * Creates the index
+ */
 $app->get('/', function (Silex\Application $app) {
     $c = $app['config']->display;
 

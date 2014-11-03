@@ -1,6 +1,6 @@
 {
     "google_api": {
-        "app_name": "xxxx",
+        "app_name": "Project X",
         "username": "xxxxx@developer.gserviceaccount.com",
         "key_path": "/../config/key.p12",
         "key_secret": "notasecret"
@@ -11,8 +11,8 @@
     },
     "websites": [
         {
-            "tracking_id": "UA-21936946-1",
-            "name": "Moment of Geekiness"
+            "tracking_id": "UA-12345678-1",
+            "name": "Your Website"
         }
     ]
 }
